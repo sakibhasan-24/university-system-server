@@ -1,7 +1,15 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
+import cors from "cors";
+import { userRoutes } from "./app/modules/user/user.routes";
+import { globalErrorHandler } from "./app/middleware/globalErrorHandler";
 const app = express();
 const port = 3000;
+app.use(express.json());
+app.use(cors());
+app.use("/api/v1/users", userRoutes);
 
+// global error handle
+app.use(globalErrorHandler);
 export default app.get("/", (req, res) => {
   res.send("Hello World!");
 });
