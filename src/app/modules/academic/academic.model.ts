@@ -37,7 +37,17 @@ const academicSchema = new Schema<TAcademicSemester>(
     timestamps: true,
   }
 );
+academicSchema.pre("save", async function (next) {
+  const isSemesterExists = await academicSemester.countDocuments({
+    year: this.year,
+    name: this.name,
+  });
+  if (isSemesterExists > 0) {
+    throw new Error("Already a semester created");
+  }
 
+  next();
+});
 const academicSemester = model<TAcademicSemester>(
   "AcademicSemester",
   academicSchema
