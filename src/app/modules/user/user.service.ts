@@ -18,7 +18,7 @@ const createStudentInDb = async (password: string, payLoad: TStudent) => {
     payLoad.admissionSemester
   );
   if (admissionSemester !== null) {
-    userData.id = generateStudentId(admissionSemester);
+    userData.id = await generateStudentId(admissionSemester);
   }
   const result = await User.create(userData);
   // console.log(result.id, "res");
