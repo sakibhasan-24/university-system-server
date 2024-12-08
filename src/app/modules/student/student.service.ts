@@ -1,12 +1,24 @@
+import mongoose from "mongoose";
 import { Student } from "./student.model";
 
 const getAllStudentsFromDB = async () => {
-  const result = await Student.find();
+  console.log(mongoose.modelNames());
+  const result = await Student.find()
+    .populate("admissionSemester")
+    .populate({
+      path: "academicDepartment",
+      populate: {
+        path: "academicFaculty",
+      },
+    });
+
   return result;
 };
 
 const getSingleStudentFromDB = async (id: string) => {
   const result = await Student.aggregate([{ $match: { id } }]);
+  // .populate("academicDepartment")
+  // .populate("admissionSemester");
   return result;
 };
 
