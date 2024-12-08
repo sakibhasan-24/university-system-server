@@ -39,7 +39,7 @@ const getSingleAcademicFaculty = catchAsync(async (req, res) => {
   });
 });
 
-const updateAcademicSemester = catchAsync(async (req, res) => {
+const updateAcademicFaculty = catchAsync(async (req, res) => {
   const { facultyId } = req.params;
   const result = await academicFacultyServices.updateAcademicFaculty(
     facultyId,
@@ -57,5 +57,5 @@ export const academicFacultyController = {
   createAcademicFaculty,
   getAllAcademicFaculties,
   getSingleAcademicFaculty,
-  updateAcademicSemester,
+  updateAcademicFaculty,
 };
