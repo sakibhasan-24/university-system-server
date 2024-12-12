@@ -5,9 +5,35 @@ import httpStatus from "http-status";
 import User from "../user/user.model";
 import { TStudent } from "./student.interface";
 
-const getAllStudentsFromDB = async () => {
-  console.log(mongoose.modelNames());
-  const result = await Student.find()
+const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
+  let searchTerm = "";
+  let queryObj = { ...query };
+  const studentSearchAbleFields = ["email", "name.firstName", "presentAddress"];
+  if (query?.searchTerm) {
+    searchTerm = query?.searchTerm as string;
+  }
+
+  const excludes = ["searchTerm", "sort", "limit"];
+  excludes.forEach((el) => delete queryObj[el]);
+  console.log(query);
+  console.log(queryObj, "queryObj");
+  // console.log(mongoose.modelNames());
+
+  // const searchQuery = Student.find({
+  //   $or: studentSearchAbleFields.map((field) => ({
+  //     [field]: searchTerm
+  //       ? { $regex: searchTerm, $options: "i" }
+  //       : { $nin: studentSearchAbleFields },
+  //   })),
+  // });
+  const searchQuery = Student.find({
+    $or: studentSearchAbleFields.map((field) => ({
+      [field]: { $regex: searchTerm, $options: "i" },
+    })),
+  });
+  // filter result
+  const filterResult = searchQuery
+    .find(queryObj)
     .populate("admissionSemester")
     .populate({
       path: "academicDepartment",
@@ -16,7 +42,21 @@ const getAllStudentsFromDB = async () => {
       },
     });
 
-  return result;
+  // console.log(filterResult);
+  let sort = "-createdAt";
+  if (query.sort) {
+    sort = query.sort as string;
+  }
+  // console.log(sort);
+  const sortResult = filterResult.sort(sort);
+  let limit = 10;
+  if (query.limit) {
+    limit = query.limit as number;
+  }
+  // console.log(sortResult, "sortResult");
+  const limitQueryResult = await sortResult.limit(limit);
+  return limitQueryResult;
+  // return result;
 };
 
 const getSingleStudentFromDB = async (id: string) => {
