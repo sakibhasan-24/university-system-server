@@ -81,14 +81,14 @@ const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
     .sort()
     .paginate()
     .fields();
-  console.log(studentQuery);
+  // console.log(studentQuery);
   const result = await studentQuery.modelQuery;
   return result;
 };
 
 const getSingleStudentFromDB = async (id: string) => {
   // const result = await Student.aggregate([{ $match: { id } }]);
-  const result = await Student.findOne({ id });
+  const result = await Student.findById(id);
   // .populate("academicDepartment")
   // .populate("admissionSemester");
   return result;
@@ -98,7 +98,7 @@ const deleteStudentFromDB = async (id: string) => {
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
-    const deletedStudent = await Student.findOneAndUpdate(
+    const deletedStudent = await Student.findByIdAndUpdate(
       { id },
       { isDeleted: true },
       {
@@ -106,11 +106,13 @@ const deleteStudentFromDB = async (id: string) => {
         session,
       }
     );
+
     if (!deletedStudent) {
       throw new appError(httpStatus.BAD_REQUEST, "Failed to delete");
     }
-    const deletedUser = await User.findOneAndUpdate(
-      { id },
+    const userId = deletedStudent.user;
+    const deletedUser = await User.findByIdAndUpdate(
+      userId,
       { isDeleted: true },
       session
     );
