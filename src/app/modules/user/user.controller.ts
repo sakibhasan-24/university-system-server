@@ -3,6 +3,17 @@ import { userService } from "./user.service";
 import sentResponse from "../../utils/sentResponse";
 import status from "http-status";
 import catchAsync from "../../utils/catchAsync";
+import appError from "../../error/AppError";
+import httpStatus from "http-status";
+import { Admin } from "../admin/admin.model";
+import User from "./user.model";
+import mongoose from "mongoose";
+import config from "../../config";
+import { TUser } from "./user.interface";
+import { TAdmin } from "../admin/admin.interface";
+import { Faculty } from "../faculty/faculty.model";
+import AcademicDepartment from "../academicDepartment/academicDepartment.model";
+import { TFaculty } from "../faculty/faculty.interface";
 
 //without catchAsync Way
 // const createStudent = async (
@@ -48,6 +59,34 @@ const createStudent = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const createFaculty = catchAsync(async (req, res) => {
+  const { password, faculty: facultyData } = req.body;
+
+  const result = await userService.createFacultyIntoDB(password, facultyData);
+
+  sentResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Faculty is created succesfully",
+    data: result,
+  });
+});
+
+const createAdmin = catchAsync(async (req, res) => {
+  const { password, admin: adminData } = req.body;
+
+  const result = await userService.createAdminIntoDB(password, adminData);
+
+  sentResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Admin is created succesfully",
+    data: result,
+  });
+});
+
 export const UserControllers = {
   createStudent,
+  createAdmin,
+  createFaculty,
 };

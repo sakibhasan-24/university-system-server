@@ -8,20 +8,57 @@ import { TFaculty } from "./faculty.interface";
 import { Faculty } from "./faculty.model";
 import appError from "../../error/AppError";
 import User from "../user/user.model";
+// import User from "../user/user.model";
 
 const getAllFacultiesFromDB = async (query: Record<string, unknown>) => {
-  const facultyQuery = new QueryBuilder(
-    Faculty.find().populate("academicDepartment"),
-    query
-  )
-    .search(FacultySearchableFields)
-    .filter()
-    .sort()
-    .paginate()
-    .fields();
+  console.log("faculty");
+  const test = await Faculty.find();
+  // // console.log(test);
+  // console.log("faculty");
+  // const baseQuery = Faculty.find().populate("academicDepartment");
 
-  const result = await facultyQuery.modelQuery;
-  return result;
+  // // Test `search` method
+  // const searchQuery = new QueryBuilder(baseQuery, query).search(
+  //   FacultySearchableFields
+  // );
+  // console.log("After search:", searchQuery.modelQuery);
+
+  // // Test `filter` method
+  // const filterQuery = searchQuery.filter();
+  // console.log("After filter:", filterQuery.modelQuery);
+
+  // // Test `sort` method
+  // const sortQuery = filterQuery.sort();
+  // console.log("After sort:", sortQuery.modelQuery);
+
+  // // Test `paginate` method
+  // const paginateQuery = sortQuery.paginate();
+  // console.log("After paginate:", paginateQuery.modelQuery);
+
+  // // Test `fields` method
+  // const finalQuery = paginateQuery.fields();
+  // console.log("Final Query Object:", finalQuery.modelQuery);
+
+  // // Execute query
+  // const result = await finalQuery.modelQuery;
+  // console.log("Result:", result);
+
+  // return result;
+
+  // const facultyQuery = new QueryBuilder(
+  //   Faculty.find().populate("academicDepartment"),
+  //   query
+  // )
+  //   .search(FacultySearchableFields)
+  //   .filter()
+  //   .sort()
+  //   .paginate()
+  //   .fields();
+
+  // // console.log(facultyQuery);
+  // const result = await facultyQuery.modelQuery;
+  // console.log(result);
+  return test;
 };
 
 const getSingleFacultyFromDB = async (id: string) => {
