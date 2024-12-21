@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import { userRoutes } from "./app/modules/user/user.routes";
 import { globalErrorHandler } from "./app/middleware/globalErrorHandler";
 import { notFound } from "./app/middleware/notFound";
@@ -8,6 +9,8 @@ const app = express();
 const port = 3000;
 app.use(express.json());
 app.use(cors());
+// app.use();
+app.use(cookieParser());
 app.use("/api/v1", router);
 // app.use("/api/v1/students");
 
